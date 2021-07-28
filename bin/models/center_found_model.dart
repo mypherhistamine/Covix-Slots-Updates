@@ -20,4 +20,20 @@ class VacCenterFound {
       this.pinCode,
       this.timeFetched,
       this.vaccineName});
+
+  @override
+  String toString() {
+    return '''
+    Center Name: $centerName,
+    centerName;
+    time-fetched $timeFetched;
+    pincode $pinCode;
+    date-of-vaccine $date;
+    dose-1-seats $dose1;
+    vacc-name $vaccineName;
+    is-all-ages $allAges;
+    min-age-limit $minAgeLimit;
+    max-age-limit $maxAgeLimit;
+    ''';
+  }
 }
