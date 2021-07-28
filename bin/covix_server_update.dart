@@ -9,6 +9,7 @@ void main(List<String> arguments) {
   var sendAlertToDiscordChannel = DiscordAlerter();
   var controller = CovidSessionAvailabilityController();
   var slotFound = false;
+  var centerFoundCalled = 1;
   //list of centers found
   List<VacCenterFound> centersFound = [];
 
@@ -52,27 +53,23 @@ void main(List<String> arguments) {
     );
   }
 
-  //listen to slot changes
-  void districtWiseSlotHandler(CovidSessionByDistrict centers) {
+  //PinCode controller slots
+  // controller
+  //     .fetchSlotsForPincodeAndDateProvided('110085', '27-07-2021')
+  //     .listen((event) => pinCodeSlotsHandler(event));
+
+  // District controller slots
+  controller
+      .showSlotsByDistrictOfOneWeek('147', '29-07-2021')
+      .listen((CovidSessionByDistrict centers) {
+    print('districtWiseSlotHandler called');
     centers.sessions!.forEach(
       (singleSession) {
         //applying the filters
         if (
             // singleSession.availableCapacity! > 0 &&
-            singleSession.feeType == FeeType.FREE
-            // &&
-            // singleSession.availableCapacityDose2! > 0
-            ) {
-          print('Time Fetched - ${DateTime.now()}');
-          print('Center Name: ${singleSession.name}');
-          print('Pin Code: ${singleSession.pincode}');
-          print('Date - ${singleSession.date}');
-          print('Dose 1 Seats - ${singleSession.availableCapacityDose1}');
-          print('Dose 2 Seats - ${singleSession.availableCapacityDose2}');
-          // print('Vaccine Name : ${singleSession.vaccineName}');
-          print(
-              'Age Limit ${singleSession.minAgeLimit} - ${singleSession.minAgeLimit}');
-          print('All ages ${singleSession.allowAllAge}');
+            singleSession.feeType == FeeType.FREE &&
+                singleSession.availableCapacityDose2! > 0) {
           centersFound.add(
             VacCenterFound(
               allAges: singleSession.allowAllAge.toString(),
@@ -91,20 +88,16 @@ void main(List<String> arguments) {
         }
       },
     );
-    if (slotFound) {
-      sendAlertToDiscordChannel.testWebHook(centers: centersFound);
-      centersFound.clear();
-      slotFound = false;
-    }
-  }
-
-  //PinCode controller slots
-  // controller
-  //     .fetchSlotsForPincodeAndDateProvided('110085', '27-07-2021')
-  //     .listen((event) => pinCodeSlotsHandler(event));
-
-  // District controller slots
-  controller
-      .showSlotsByDistrictOfOneWeek('147', '29-07-2021')
-      .listen((event) => districtWiseSlotHandler(event));
+    // if () {
+    //   print('centers found called $centerFoundCalled times');
+    //   // centersFound.forEach((element) {
+    //   //   print(element);
+    //   // });
+    //   print('total centers ${centersFound.length}');
+    //   sendAlertToDiscordChannel.testWebHook(centers: centersFound);
+    //   centersFound.clear();
+    //   slotFound = false;
+    //   centerFoundCalled++;
+    // }
+  });
 }
