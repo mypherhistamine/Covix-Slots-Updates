@@ -61,60 +61,62 @@ void main(List<String> arguments) {
   //     .listen((event) => pinCodeSlotsHandler(event));
 
   // District controller slots
-  int doTwic = 0;
-  // controller.showSlotsByDistrictOfOneWeek('147', '29-07-2021').listen(
-  //   (centers) {
-  //     centers.centers!.forEach(
-  //       (singleCenters) {
-  //         singleCenters.sessions!.forEach((singleSession) {
-  //           if (
-  //               // singleSession.availableCapacity! > 0 &&
-  //               singleCenters.feeType == 'Free' &&
-  //                   singleSession.availableCapacityDose2! > 36) {
-  //             centersFound.add(
-  //               VacCenterFound(
-  //                 allAges: singleSession.allowAllAge.toString(),
-  //                 centerName: singleCenters.name,
-  //                 // date: singleSession.date,
-  //                 dose1: singleSession.availableCapacityDose1.toString(),
-  //                 maxAgeLimit: singleSession.maxAgeLimit.toString(),
-  //                 minAgeLimit: singleSession.minAgeLimit.toString(),
-  //                 pinCode: singleCenters.pincode.toString(),
-  //                 date: singleSession.date.toString(),
-  //                 vaccineName: singleSession.vaccine,
-  //                 dose2: singleSession.availableCapacityDose2.toString(),
-  //                 timeFetched: DateTime.now().toLocal().toString(),
-  //                 // vaccineName: singleSession.vaccineName,
-  //               ),
-  //             );
-  //             slotFound = true;
-  //             // covidMailer.sendMailToUser();
-  //           }
-  //         });
-  //         //applying the filters
-  //       },
-  //     );
-  //     if (slotFound) {
-  //       print('Found${centersFound.length}centers sending message to Discord');
-  //       sendAlertToDiscordChannel.testWebHook(centers: centersFound);
-  //       centersFound.forEach((element) {
-  //         print(element);
-  //       });
-  //       centersFound.clear();
-  //       slotFound = false;
-  //     }
-  //   },
-  // );
-  waitAfterSending(sendAlertToDiscordChannel);
+  controller.showSlotsByDistrictOfOneWeek('146', '31-07-2021').listen(
+    (centers) {
+      centers.centers!.forEach(
+        (singleCenters) {
+          singleCenters.sessions!.forEach((singleSession) {
+            if (
+                // singleSession.availableCapacity! > 0 &&
+                singleCenters.feeType == 'Free' &&
+                    singleSession.availableCapacityDose2! > 20) {
+              centersFound.add(
+                VacCenterFound(
+                  allAges: singleSession.allowAllAge.toString(),
+                  centerName: singleCenters.name,
+                  // date: singleSession.date,
+                  dose1: singleSession.availableCapacityDose1.toString(),
+                  maxAgeLimit: singleSession.maxAgeLimit.toString(),
+                  minAgeLimit: singleSession.minAgeLimit.toString(),
+                  pinCode: singleCenters.pincode.toString(),
+                  date: singleSession.date.toString(),
+                  vaccineName: singleSession.vaccine,
+                  dose2: singleSession.availableCapacityDose2.toString(),
+                  timeFetched: DateTime.now().toLocal().toString(),
+                  // vaccineName: singleSession.vaccineName,
+                ),
+              );
+              slotFound = true;
+              // covidMailer.sendMailToUser();
+            }
+          });
+          //applying the filters
+        },
+      );
+      if (slotFound) {
+        // print('Found${centersFound.length}centers sending message to Discord');
+        sendAlertToDiscordChannel.sendCentersMessageOnDiscord(
+            centers: centersFound);
+        centersFound.forEach((element) {
+          print(element);
+        });
+        centersFound.clear();
+        slotFound = false;
+      }
+    },
+  );
+  // waitAfterSending(sendAlertToDiscordChannel);
 }
 
-void waitAfterSending(DiscordAlerter alrter) async {
-  int counter = 0;
-  while (counter < 50) {
-    alrter.testWebHook();
-    await Future.delayed(
-      Duration(seconds: 20),
-    );
-    counter++;
-  }
-}
+
+
+// void waitAfterSending(DiscordAlerter alrter) async {
+  
+//   while (counter < 50) {
+//     alrter.testWebHook();
+//     await Future.delayed(
+//       Duration(seconds: 20),
+//     );
+//     counter++;
+//   }
+// }

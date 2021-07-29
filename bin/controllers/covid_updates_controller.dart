@@ -56,7 +56,7 @@ class CovidSessionAvailabilityController {
         break; //break stream if some error occurs
       }
       //delay the api as COWIN api has a cap mention on line `[11]`
-      await Future.delayed(Duration(seconds: 10));
+      await Future.delayed(Duration(seconds: 60));
     }
   }
 }

@@ -1,4 +1,4 @@
 class EnvironmentVariables {
   static const DISCORD_WEB_HOOK_API =
-      'https://discord.com/api/webhooks/870129359741132861/Xz1S4uyUv0IAYAzIpEK2ldfEfyT0mhSzFb77TXDN1ybrEi9z2a-WvvW5pVj57NqpfGgw';
+      'https://discord.com/api/webhooks/870147579499917333/D4Q9pKUihs3hx4BcstL1EyCH_bmB6qcP4XVtXZVW8l9OEpyMof4b51E1BTN-iufghAwF';
 }
