@@ -110,10 +110,10 @@ void main(List<String> arguments) {
 
 void waitAfterSending(DiscordAlerter alrter) async {
   int counter = 0;
-  while (counter < 5) {
+  while (counter < 50) {
     alrter.testWebHook();
     await Future.delayed(
-      Duration(seconds: 10),
+      Duration(seconds: 20),
     );
     counter++;
   }
