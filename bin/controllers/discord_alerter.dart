@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import '../models/center_found_model.dart';
 
 class DiscordAlerter {
-  void testWebHook({List<VacCenterFound>? centers, String? timeFetched}) async {
+  void sendCentersMessageOnDiscord(
+      {List<VacCenterFound>? centers, String? timeFetched}) async {
     String mssgToSend = '';
     print('${centers!.length} centers');
     centers.forEach((element) {
@@ -13,12 +14,16 @@ class DiscordAlerter {
               mssgToSend;
     });
 
-
     final response = await http
         .post(Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API), body: {
       'content': mssgToSend,
       'tts': 'true',
     });
     print(response.body);
+  }
+
+  void testWebHook() async {
+    await http.post(Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API),
+        body: {'content': 'pingTest', 'tts': 'true'});
   }
 }
