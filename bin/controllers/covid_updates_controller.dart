@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class CovidSessionAvailabilityController {
   String calendarByDisctrict = '';
   //cowin api calls function
-  int apiCalled = 0;
+  int apiCalled = 1;
 
   Stream<CovidSession> fetchSlotsForPincodeAndDateProvided(
       String pinCode, String date) async* {
@@ -35,19 +35,19 @@ class CovidSessionAvailabilityController {
     }
   }
 
-  Stream<CovidSessionByDistrict> showSlotsByDistrictOfOneWeek(
-      String pinCode, String date) async* {
+  Stream<SessionsByDistrict> showSlotsByDistrictOfOneWeek(
+      String districtCode, String date) async* {
     //api limit
     //100 API calls per 5 minutes per IP
     //means 20 API calls per minute per IP
 
     while (true) {
       final response = await http.get(Uri.parse(
-          'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=$pinCode&date=$date'));
+          'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$districtCode&date=$date'));
       if (response.statusCode == 200) {
         print('api called $apiCalled times');
         apiCalled++;
-        yield CovidSessionByDistrict.fromJson(jsonDecode(response.body));
+        yield SessionsByDistrict.fromJson(jsonDecode(response.body));
         // print('Last fethced : ${DateTime.now()}');
         // print('${response.body}');
       } else {

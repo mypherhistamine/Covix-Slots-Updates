@@ -9,7 +9,7 @@ void main(List<String> arguments) {
   var sendAlertToDiscordChannel = DiscordAlerter();
   var controller = CovidSessionAvailabilityController();
   var slotFound = false;
-  var centerFoundCalled = 1;
+
   //list of centers found
   List<VacCenterFound> centersFound = [];
 
@@ -23,15 +23,15 @@ void main(List<String> arguments) {
             if (singleSession.availableCapacity! > 0 &&
                 center.feeType == 'Free' &&
                 singleSession.availableCapacityDose1! > 0) {
-              print('Time Fetched - ${DateTime.now()}');
-              print('Center Name: ${center.name}');
-              print('Pin Code: ${center.name}');
-              print('Date - ${singleSession.date}');
-              print('Dose 1 Seats - ${singleSession.availableCapacityDose1}');
-              print('Vaccine Name : ${singleSession.vaccineName}');
-              print(
-                  'Age Limit ${singleSession.minAgeLimit} - ${singleSession.maxAgeLimit}');
-              print('All ages ${singleSession.allowAllAge}');
+              // print('Time Fetched - ${DateTime.now()}');
+              // print('Center Name: ${center.name}');
+              // print('Pin Code: ${center.name}');
+              // print('Date - ${singleSession.date}');
+              // print('Dose 1 Seats - ${singleSession.availableCapacityDose1}');
+              // print('Vaccine Name : ${singleSession.vaccineName}');
+              // print(
+              //     'Age Limit ${singleSession.minAgeLimit} - ${singleSession.maxAgeLimit}');
+              // print('All ages ${singleSession.allowAllAge}');
               centersFound.add(
                 VacCenterFound(
                     allAges: singleSession.allowAllAge.toString(),
@@ -59,45 +59,48 @@ void main(List<String> arguments) {
   //     .listen((event) => pinCodeSlotsHandler(event));
 
   // District controller slots
-  controller
-      .showSlotsByDistrictOfOneWeek('147', '29-07-2021')
-      .listen((CovidSessionByDistrict centers) {
-    print('districtWiseSlotHandler called');
-    centers.sessions!.forEach(
-      (singleSession) {
-        //applying the filters
-        if (
-            // singleSession.availableCapacity! > 0 &&
-            singleSession.feeType == FeeType.FREE &&
-                singleSession.availableCapacityDose2! > 0) {
-          centersFound.add(
-            VacCenterFound(
-              allAges: singleSession.allowAllAge.toString(),
-              centerName: singleSession.name,
-              // date: singleSession.date,
-              dose1: singleSession.availableCapacityDose1.toString(),
-              maxAgeLimit: singleSession.maxAgeLimit.toString(),
-              minAgeLimit: singleSession.minAgeLimit.toString(),
-              pinCode: singleSession.pincode.toString(),
-              timeFetched: DateTime.now().toLocal().toString(),
-              // vaccineName: singleSession.vaccineName,
-            ),
-          );
-          slotFound = true;
-          // covidMailer.sendMailToUser();
-        }
-      },
-    );
-    // if () {
-    //   print('centers found called $centerFoundCalled times');
-    //   // centersFound.forEach((element) {
-    //   //   print(element);
-    //   // });
-    //   print('total centers ${centersFound.length}');
-    //   sendAlertToDiscordChannel.testWebHook(centers: centersFound);
-    //   centersFound.clear();
-    //   slotFound = false;
-    //   centerFoundCalled++;
-    // }
-  });
+  int doTwic = 0;
+  controller.showSlotsByDistrictOfOneWeek('147', '29-07-2021').listen(
+    (centers) {
+      centers.centers!.forEach(
+        (singleCenters) {
+          singleCenters.sessions!.forEach((singleSession) {
+            if (
+                // singleSession.availableCapacity! > 0 &&
+                singleCenters.feeType == 'Free' &&
+                    singleSession.availableCapacityDose2! > 36) {
+              centersFound.add(
+                VacCenterFound(
+                  allAges: singleSession.allowAllAge.toString(),
+                  centerName: singleCenters.name,
+                  // date: singleSession.date,
+                  dose1: singleSession.availableCapacityDose1.toString(),
+                  maxAgeLimit: singleSession.maxAgeLimit.toString(),
+                  minAgeLimit: singleSession.minAgeLimit.toString(),
+                  pinCode: singleCenters.pincode.toString(),
+                  date: singleSession.date.toString(),
+                  vaccineName: singleSession.vaccine,
+                  dose2: singleSession.availableCapacityDose2.toString(),
+                  timeFetched: DateTime.now().toLocal().toString(),
+                  // vaccineName: singleSession.vaccineName,
+                ),
+              );
+              slotFound = true;
+              // covidMailer.sendMailToUser();
+            }
+          });
+          //applying the filters
+        },
+      );
+      if (slotFound) {
+        print('Found${centersFound.length}centers sending message to Discord');
+        sendAlertToDiscordChannel.testWebHook(centers: centersFound);
+        centersFound.forEach((element) {
+          print(element);
+        });
+        centersFound.clear();
+        slotFound = false;
+      }
+    },
+  );
 }

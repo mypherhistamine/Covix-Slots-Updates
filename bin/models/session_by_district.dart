@@ -1,175 +1,177 @@
-// To parse this JSON data, do
-//
-//     final covidSessionByDistrict = covidSessionByDistrictFromJson(jsonString);
+class SessionsByDistrict {
+  List<Centers>? centers;
 
-import 'dart:convert';
+  SessionsByDistrict({this.centers});
 
-CovidSessionByDistrict covidSessionByDistrictFromJson(String str) =>
-    CovidSessionByDistrict.fromJson(json.decode(str));
+  SessionsByDistrict.fromJson(Map<String, dynamic> json) {
+    if (json['centers'] != null) {
+      centers = <Centers>[];
+      json['centers'].forEach((v) {
+        centers!.add(new Centers.fromJson(v));
+      });
+    }
+  }
 
-String covidSessionByDistrictToJson(CovidSessionByDistrict data) =>
-    json.encode(data.toJson());
-
-class CovidSessionByDistrict {
-  CovidSessionByDistrict({
-    this.sessions,
-  });
-
-  List<Session>? sessions;
-
-  factory CovidSessionByDistrict.fromJson(Map<String, dynamic> json) =>
-      CovidSessionByDistrict(
-        sessions: List<Session>.from(
-            json["sessions"].map((x) => Session.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "sessions": List<dynamic>.from(sessions!.map((x) => x.toJson())),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.centers != null) {
+      data['centers'] = this.centers!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
-class Session {
-  Session({
-    this.centerId,
-    this.name,
-    this.address,
-    this.stateName,
-    this.districtName,
-    this.blockName,
-    this.pincode,
-    this.from,
-    this.to,
-    this.lat,
-    this.long,
-    this.feeType,
-    this.sessionId,
-    this.date,
-    this.availableCapacity,
-    this.availableCapacityDose1,
-    this.availableCapacityDose2,
-    this.fee,
-    this.allowAllAge,
-    this.minAgeLimit,
-    this.vaccine,
-    this.slots,
-    this.maxAgeLimit
-  });
-
+class Centers {
   int? centerId;
   String? name;
   String? address;
-  StateName? stateName;
-  DistrictName? districtName;
-  BlockName? blockName;
+  String? stateName;
+  String? districtName;
+  String? blockName;
   int? pincode;
-  String? from;
-  String? to;
   int? lat;
   int? long;
-  FeeType? feeType;
-  String? sessionId;
-  Date? date;
-  int? availableCapacity;
-  int? availableCapacityDose1;
-  int? availableCapacityDose2;
-  String? fee;
-  bool? allowAllAge;
-  int? minAgeLimit;
-  int? maxAgeLimit;
-  Vaccine? vaccine;
-  List<String>? slots;
+  String? from;
+  String? to;
+  String? feeType;
+  List<Sessions>? sessions;
+  List<VaccineFees>? vaccineFees;
 
-  factory Session.fromJson(Map<String, dynamic> json) => Session(
-        centerId: json["center_id"],
-        name: json["name"],
-        address: json["address"],
-        stateName: stateNameValues.map![json["state_name"]],
-        districtName: districtNameValues.map![json["district_name"]],
-        blockName: blockNameValues.map![json["block_name"]],
-        pincode: json["pincode"],
-        from: json["from"],
-        to: json["to"],
-        lat: json["lat"],
-        long: json["long"],
-        feeType: feeTypeValues.map![json["fee_type"]],
-        sessionId: json["session_id"],
-        date: dateValues.map![json["date"]],
-        availableCapacity: json["available_capacity"],
-        availableCapacityDose1: json["available_capacity_dose1"],
-        availableCapacityDose2: json["available_capacity_dose2"],
-        maxAgeLimit : json['max_age_limit'],
-        fee: json["fee"],
-        allowAllAge:
-            json["allow_all_age"] == null ? null : json["allow_all_age"],
-          
-        minAgeLimit: json["min_age_limit"],
-        vaccine: vaccineValues.map![json["vaccine"]],
-        slots: List<String>.from(json["slots"].map((x) => x)),
-      );
+  Centers(
+      {this.centerId,
+      this.name,
+      this.address,
+      this.stateName,
+      this.districtName,
+      this.blockName,
+      this.pincode,
+      this.lat,
+      this.long,
+      this.from,
+      this.to,
+      this.feeType,
+      this.sessions,
+      this.vaccineFees});
 
-  Map<String, dynamic> toJson() => {
-        "center_id": centerId,
-        "name": name,
-        "address": address,
-        "state_name": stateNameValues.reverse[stateName],
-        "district_name": districtNameValues.reverse[districtName],
-        "block_name": blockNameValues.reverse[blockName],
-        "pincode": pincode,
-        "from": from,
-        "to": to,
-        "lat": lat,
-        "long": long,
-        "fee_type": feeTypeValues.reverse[feeType],
-        "session_id": sessionId,
-        "date": dateValues.reverse[date],
-        "available_capacity": availableCapacity,
-        "available_capacity_dose1": availableCapacityDose1,
-        "available_capacity_dose2": availableCapacityDose2,
-        "fee": fee,
-        "allow_all_age": allowAllAge == null ? null : allowAllAge,
-        "min_age_limit": minAgeLimit,
-        "vaccine": vaccineValues.reverse[vaccine],
-        "slots": List<dynamic>.from(slots!.map((x) => x)),
-      };
+  Centers.fromJson(Map<String, dynamic> json) {
+    centerId = json['center_id'];
+    name = json['name'];
+    address = json['address'];
+    stateName = json['state_name'];
+    districtName = json['district_name'];
+    blockName = json['block_name'];
+    pincode = json['pincode'];
+    lat = json['lat'];
+    long = json['long'];
+    from = json['from'];
+    to = json['to'];
+    feeType = json['fee_type'];
+    if (json['sessions'] != null) {
+      sessions = <Sessions>[];
+      json['sessions'].forEach((v) {
+        sessions!.add(new Sessions.fromJson(v));
+      });
+    }
+    if (json['vaccine_fees'] != null) {
+      vaccineFees = <VaccineFees>[];
+      json['vaccine_fees'].forEach((v) {
+        vaccineFees!.add(new VaccineFees.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['center_id'] = this.centerId;
+    data['name'] = this.name;
+    data['address'] = this.address;
+    data['state_name'] = this.stateName;
+    data['district_name'] = this.districtName;
+    data['block_name'] = this.blockName;
+    data['pincode'] = this.pincode;
+    data['lat'] = this.lat;
+    data['long'] = this.long;
+    data['from'] = this.from;
+    data['to'] = this.to;
+    data['fee_type'] = this.feeType;
+    if (this.sessions != null) {
+      data['sessions'] = this.sessions!.map((v) => v.toJson()).toList();
+    }
+    if (this.vaccineFees != null) {
+      data['vaccine_fees'] = this.vaccineFees!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
-enum BlockName { NOT_APPLICABLE }
+class Sessions {
+  String? sessionId;
+  String? date;
+  int? availableCapacity;
+  int? minAgeLimit;
+  bool? allowAllAge;
+  String? vaccine;
+  List<String>? slots;
+  int? availableCapacityDose1;
+  int? availableCapacityDose2;
+  int? maxAgeLimit;
 
-final blockNameValues =
-    EnumValues({"Not Applicable": BlockName.NOT_APPLICABLE});
+  Sessions(
+      {this.sessionId,
+      this.date,
+      this.availableCapacity,
+      this.minAgeLimit,
+      this.allowAllAge,
+      this.vaccine,
+      this.slots,
+      this.availableCapacityDose1,
+      this.availableCapacityDose2,
+      this.maxAgeLimit});
 
-enum Date { THE_29072021 }
+  Sessions.fromJson(Map<String, dynamic> json) {
+    sessionId = json['session_id'];
+    date = json['date'];
+    availableCapacity = json['available_capacity'];
+    minAgeLimit = json['min_age_limit'];
+    allowAllAge = json['allow_all_age'];
+    vaccine = json['vaccine'];
+    slots = json['slots'].cast<String>();
+    availableCapacityDose1 = json['available_capacity_dose1'];
+    availableCapacityDose2 = json['available_capacity_dose2'];
+    maxAgeLimit = json['max_age_limit'];
+  }
 
-final dateValues = EnumValues({"29-07-2021": Date.THE_29072021});
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['session_id'] = this.sessionId;
+    data['date'] = this.date;
+    data['available_capacity'] = this.availableCapacity;
+    data['min_age_limit'] = this.minAgeLimit;
+    data['allow_all_age'] = this.allowAllAge;
+    data['vaccine'] = this.vaccine;
+    data['slots'] = this.slots;
+    data['available_capacity_dose1'] = this.availableCapacityDose1;
+    data['available_capacity_dose2'] = this.availableCapacityDose2;
+    data['max_age_limit'] = this.maxAgeLimit;
+    return data;
+  }
+}
 
-enum DistrictName { CENTRAL_DELHI }
+class VaccineFees {
+  String? vaccine;
+  String? fee;
 
-final districtNameValues =
-    EnumValues({"Central Delhi": DistrictName.CENTRAL_DELHI});
+  VaccineFees({this.vaccine, this.fee});
 
-enum FeeType { PAID, FREE }
+  VaccineFees.fromJson(Map<String, dynamic> json) {
+    vaccine = json['vaccine'];
+    fee = json['fee'];
+  }
 
-final feeTypeValues = EnumValues({"Free": FeeType.FREE, "Paid": FeeType.PAID});
-
-enum StateName { DELHI }
-
-final stateNameValues = EnumValues({"Delhi": StateName.DELHI});
-
-enum Vaccine { COVISHIELD, COVAXIN , SPUTNIK }
-
-final vaccineValues =
-    EnumValues({"COVAXIN": Vaccine.COVAXIN, "COVISHIELD": Vaccine.COVISHIELD});
-
-class EnumValues<T> {
-  Map<String, T>? map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map!.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap!;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['vaccine'] = this.vaccine;
+    data['fee'] = this.fee;
+    return data;
   }
 }
