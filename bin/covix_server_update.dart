@@ -21,7 +21,7 @@ void main(List<String> arguments) {
             //applying the filters
             if (singleSession.availableCapacity! > 0 &&
                 center.feeType == 'Free' &&
-                singleSession.availableCapacityDose1! > 0) {
+                singleSession.availableCapacityDose2! > 0) {
               // print('Time Fetched - ${DateTime.now()}');
               // print('Center Name: ${center.name}');
               // print('Pin Code: ${center.name}');
