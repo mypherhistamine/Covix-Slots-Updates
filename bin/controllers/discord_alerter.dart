@@ -37,7 +37,7 @@ class DiscordAlerter {
   void pingKeepAlive() async {
     try {
       await http.post(Uri.parse(EnvironmentVariables.KEEP_ALIVE_DISCORD),
-          body: {'content': 'stable', 'tts': 'false'});
+          body: {'content': '${DateTime.now()}', 'tts': 'false'});
     } catch (e) {
       //PRINT THE ERROR
       print(e.toString());

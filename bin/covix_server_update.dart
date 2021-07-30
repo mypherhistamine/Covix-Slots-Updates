@@ -4,7 +4,7 @@ import 'models/center_found_model.dart';
 
 import 'models/session_model.dart';
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   var sendAlertToDiscordChannel = DiscordAlerter();
   var controller = CovidSessionAvailabilityController();
   var slotFound = false;
