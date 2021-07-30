@@ -68,7 +68,7 @@ class CovidSessionAvailabilityController {
         print('${response.statusCode}');
         break;
       }
-      await Future.delayed(Duration(seconds: 60));
+      await Future.delayed(Duration(seconds: 5));
     }
   }
 }

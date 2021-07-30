@@ -61,7 +61,7 @@ void main(List<String> arguments) {
             if (
                 // singleSession.availableCapacity! > 0 &&
                 singleCenters.feeType == 'Free' &&
-                    singleSession.availableCapacityDose2! > 0 &&
+                    singleSession.availableCapacityDose1! > 0 &&
                     (singleSession.vaccine == 'COVISHIELD' ||
                         singleSession.vaccine == 'COVAXIN') &&
                     (singleCenters.pincode == 110084 ||
