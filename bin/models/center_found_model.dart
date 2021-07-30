@@ -29,11 +29,10 @@ class VacCenterFound {
   String toString() {
     return '''
     Center Name: $centerName,
-    centerName;
     time-fetched $timeFetched;
+    dose-1 $dose1;
     pincode $pinCode;
     date-of-vaccine $date;
-    dose-1-seats $dose1;
     dose2 - $dose2
     vacc-name $vaccineName;
     is-all-ages $allAges;

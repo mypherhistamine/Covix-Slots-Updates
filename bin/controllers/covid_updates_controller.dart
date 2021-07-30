@@ -35,28 +35,40 @@ class CovidSessionAvailabilityController {
     }
   }
 
+  String fetchDateToday() {
+    var instance = DateTime.now();
+    var month = instance.month.toString();
+    var day = instance.day.toString();
+    var year = instance.year.toString();
+    return '$day-$month-$year';
+  }
+
+  Stream<String> currentDate() async* {
+    while (true) {
+      yield fetchDateToday();
+    }
+  }
+
   Stream<SessionsByDistrict> showSlotsByDistrictOfOneWeek(
-      String districtCode, String date) async* {
+      String districtCode) async* {
     //api limit
     //100 API calls per 5 minutes per IP
     //means 20 API calls per minute per IP
 
     while (true) {
+      var currentDate = fetchDateToday();
+      print('Date Today $currentDate');
       final response = await http.get(Uri.parse(
-          'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$districtCode&date=$date'));
+          'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$districtCode&date=$currentDate'));
       if (response.statusCode == 200) {
         print('api called $apiCalled times');
         apiCalled++;
         yield SessionsByDistrict.fromJson(jsonDecode(response.body));
-        // print('Last fethced : ${DateTime.now()}');
-        // print('${response.body}');
       } else {
-        //print error code
         print('${response.statusCode}');
-        break; //break stream if some error occurs
+        break;
       }
-      //delay the api as COWIN api has a cap mention on line `[11]`
-      await Future.delayed(Duration(seconds: 60));
+      await Future.delayed(Duration(seconds: 30));
     }
   }
 }

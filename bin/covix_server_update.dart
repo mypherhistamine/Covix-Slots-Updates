@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'controllers/covid_updates_controller.dart';
 import 'controllers/discord_alerter.dart';
 import 'models/center_found_model.dart';
-import 'models/session_by_district.dart';
+
 import 'models/session_model.dart';
-import 'package:http/http.dart' as http;
 
 void main(List<String> arguments) {
   var sendAlertToDiscordChannel = DiscordAlerter();
@@ -55,13 +52,8 @@ void main(List<String> arguments) {
     );
   }
 
-  //PinCode controller slots
-  // controller
-  //     .fetchSlotsForPincodeAndDateProvided('110085', '27-07-2021')
-  //     .listen((event) => pinCodeSlotsHandler(event));
-
   // District controller slots
-  controller.showSlotsByDistrictOfOneWeek('146', '31-07-2021').listen(
+  controller.showSlotsByDistrictOfOneWeek('146').listen(
     (centers) {
       centers.centers!.forEach(
         (singleCenters) {
@@ -69,7 +61,11 @@ void main(List<String> arguments) {
             if (
                 // singleSession.availableCapacity! > 0 &&
                 singleCenters.feeType == 'Free' &&
-                    singleSession.availableCapacityDose2! > 20) {
+                    singleSession.availableCapacityDose2! > 0 &&
+                    (singleSession.vaccine == 'COVISHIELD' || singleSession.vaccine == 'COVAXIN') &&
+                    (singleCenters.pincode == 110084 ||
+                        singleCenters.pincode == 110009 ||
+                        singleCenters.pincode == 110007)) {
               centersFound.add(
                 VacCenterFound(
                   allAges: singleSession.allowAllAge.toString(),
@@ -94,29 +90,14 @@ void main(List<String> arguments) {
         },
       );
       if (slotFound) {
-        // print('Found${centersFound.length}centers sending message to Discord');
+        print(
+            'Found ${centersFound.length} centers sending message to Discord');
         sendAlertToDiscordChannel.sendCentersMessageOnDiscord(
-            centers: centersFound);
-        centersFound.forEach((element) {
-          print(element);
-        });
+            centers: centersFound,
+            timeFetched: DateTime.now().toString().substring(0, 16));
         centersFound.clear();
         slotFound = false;
       }
     },
   );
-  // waitAfterSending(sendAlertToDiscordChannel);
 }
-
-
-
-// void waitAfterSending(DiscordAlerter alrter) async {
-  
-//   while (counter < 50) {
-//     alrter.testWebHook();
-//     await Future.delayed(
-//       Duration(seconds: 20),
-//     );
-//     counter++;
-//   }
-// }

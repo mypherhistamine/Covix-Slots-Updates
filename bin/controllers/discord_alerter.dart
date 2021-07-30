@@ -1,24 +1,33 @@
+import 'dart:async';
+
 import '../env.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/center_found_model.dart';
 
 class DiscordAlerter {
+  int counter = 1;
   void sendCentersMessageOnDiscord(
       {List<VacCenterFound>? centers, String? timeFetched}) async {
+    counter = 1;
     var mssgToSend = '';
-    centers!.forEach((element) async {
+    centers!.forEach((element) {
       mssgToSend =
-          '**`Center Name`**: ${element.centerName}\nDose 1` ${element.dose1}\n`Pincode` ${element.pinCode}\n`Date`:${element.date}\n`Synced-At` $timeFetched\n`vacc-name` ${element.vaccineName}\n`Is All Ages`  ${element.allAges}\n`min-age-limit` ${element.minAgeLimit}\n`max-age-limit` ${element.maxAgeLimit}\n\n\n';
-      sendMessage(mssgToSend);
-      await Future.delayed(Duration(seconds: 2));
+          '-\n**${element.pinCode}**  **${element.centerName}**   **`${element.dose1}`**  ${element.date}   ${element.vaccineName}\n' +
+              mssgToSend;
+      // sendMessage(mssgToSend);
+      print('Called $counter times');
+      counter++;
     });
+    sendMessage(mssgToSend);
   }
 
   void sendMessage(String mssg) async {
     try {
-      await http.post(Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API),
-          body: {'content': 'mssg', 'tts': 'true'});
+      final response = await http.post(
+          Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API),
+          body: {'content': '$mssg', 'tts': 'false'});
+      print(response.body);
     } catch (e) {
       //PRINT THE ERROR
       print(e.toString());
@@ -28,7 +37,7 @@ class DiscordAlerter {
   void testWebHook() async {
     try {
       await http.post(Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API),
-          body: {'content': 'pingTest', 'tts': 'true'});
+          body: {'content': 'pingTest', 'tts': 'false'});
     } catch (e) {
       //PRINT THE ERROR
       print(e.toString());
