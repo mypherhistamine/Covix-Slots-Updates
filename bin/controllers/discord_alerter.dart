@@ -34,10 +34,10 @@ class DiscordAlerter {
     }
   }
 
-  void testWebHook() async {
+  void pingKeepAlive() async {
     try {
-      await http.post(Uri.parse(EnvironmentVariables.DISCORD_WEB_HOOK_API),
-          body: {'content': 'pingTest', 'tts': 'false'});
+      await http.post(Uri.parse(EnvironmentVariables.KEEP_ALIVE_DISCORD),
+          body: {'content': 'stable', 'tts': 'false'});
     } catch (e) {
       //PRINT THE ERROR
       print(e.toString());

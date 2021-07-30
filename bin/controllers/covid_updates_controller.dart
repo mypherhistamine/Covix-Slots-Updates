@@ -5,10 +5,13 @@ import '../models/session_model.dart';
 
 import 'package:http/http.dart' as http;
 
+import 'discord_alerter.dart';
+
 class CovidSessionAvailabilityController {
   String calendarByDisctrict = '';
   //cowin api calls function
   int apiCalled = 1;
+  var discordMessageController = DiscordAlerter();
 
   Stream<CovidSession> fetchSlotsForPincodeAndDateProvided(
       String pinCode, String date) async* {
@@ -63,6 +66,7 @@ class CovidSessionAvailabilityController {
       if (response.statusCode == 200) {
         print('api called $apiCalled times');
         apiCalled++;
+        discordMessageController.pingKeepAlive();
         yield SessionsByDistrict.fromJson(jsonDecode(response.body));
       } else {
         print('${response.statusCode}');
