@@ -1,4 +1,4 @@
-A custom server for receving updates for slots avaiability in your area.
+A custom server for receiving updates for slots availability in your area.
 
 How to Run 
 
